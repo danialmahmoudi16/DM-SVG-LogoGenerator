@@ -2,7 +2,8 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
 const {Circle, Triangle, Square} = require('./lib/shapes.js');
-const {colorhexadec, colorname} = require ('color')
+const {validateHTMLColorHex, validateHTMLColorName} = require('validate-color')
+
 
 // Function to write the logo.svg file 
 function writeTofile(fileName, data) {
@@ -17,7 +18,7 @@ const questions = [
         message: 'Choose characters for your logo. Select up to 3 characters.',
         name: 'textchar',
         validate: (response) => {
-            if (response.textchar.length > 0 && response.textchar.length < 4 ) {
+            if (response.length > 0 && response.length < 4 ) {
                 return true;
             }
             else return 'Invalid input! Please enter 1-3 characters.';
@@ -29,7 +30,7 @@ const questions = [
         message: 'Choose a text color for your logo.',
         name: 'textcolor',
         validate: (response) => {
-            if (colorhexadec(response) == true && colorname == true) {
+            if (validateHTMLColorHex(response) == true || validateHTMLColorName(response) == true) {
                 return true;
             }
             else return 'Invvalid input! Please enter a valid color name or hexadecimal value.';
@@ -48,7 +49,7 @@ const questions = [
         message: 'Choose a shape color for your logo.',
         name: 'shapecolor',
         validate: (response) => {
-            if (colorhexadec(response) == true && colorname == true) {
+            if (validateHTMLColorHex(response) == true || validateHTMLColorName(response) == true) {
                 return true;
             }
             else return 'Invvalid input! Please enter a valid color name or hexadecimal value.';
@@ -74,7 +75,7 @@ function generateLogo(textchar, textcolor, shape, shapecolor) {
 // Function that utilizes the user prompts to then intialize the logo
 function init() {
     inquirer
-    .createPromptModule(questions)
+    .prompt(questions)
     .then((input)=>{
         textcharacter = input.textchar
         textcolor = input.textcolor
